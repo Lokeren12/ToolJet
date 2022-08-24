@@ -135,4 +135,5 @@ export const commonWidgetSelector = {
   widgetDocumentationLink: "[data-cy='widget-documentation-link']",
 
   boxShadowDefaultParam: ["x", "y", "blur", "spread"],
+  previewButton: `[data-cy="preview-link-button"]`,
 };

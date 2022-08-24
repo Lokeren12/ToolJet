@@ -28,6 +28,7 @@ import {
   verifyBoxShadowCss,
   addTextWidgetToVerifyValue,
   verifyTooltip,
+  verifyWidgetText,
 } from "Support/utils/commonWidget";
 
 describe("Multiselect widget", () => {
@@ -303,8 +304,7 @@ describe("Multiselect widget", () => {
 
     addTextWidgetToVerifyValue(`components.${data.widgetName}.values`);
 
-    cy.openInCurrentTab(`[data-cy="preview-link-button"]`);
-    //investigate on default value
+    cy.openInCurrentTab(commonWidgetSelector.previewButton);
 
     cy.get(multiselectSelector.multiselectLabel(data.widgetName)).should(
       "have.text",
@@ -317,25 +317,24 @@ describe("Multiselect widget", () => {
       "two",
       "three",
     ]);
-
-    cy.get("[data-cy='draggable-widget-text1']").should(
-      "have.text",
+    verifyWidgetText(
+      commonWidgetText.text1,
       `${data.randomValues[0].replaceAll('"', "")}`
     );
+
     selectFromMultiSelect(data.widgetName, ["", "", "true"]);
     cy.verifyToastMessage(commonSelectors.toastMessage, data.alertMessage);
-    //alert
-
-    cy.get("[data-cy='draggable-widget-text1']").should(
-      "have.text",
+    verifyWidgetText(
+      commonWidgetText.text1,
       `${data.randomValues.slice(0, 2)}`.replaceAll('"', "")
     );
 
     selectFromMultiSelect(data.widgetName, ["true"]);
-    cy.get("[data-cy='draggable-widget-text1']").should(
-      "have.text",
+    verifyWidgetText(
+      commonWidgetText.text1,
       `${data.randomValues}`.replaceAll('"', "")
     );
+
     verifyMultiselectHeader(
       data.widgetName,
       multiselectText.labelAllItemsSelected
