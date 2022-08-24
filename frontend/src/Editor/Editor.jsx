@@ -1307,6 +1307,7 @@ class Editor extends React.Component {
               <div className="navbar-nav flex-row order-md-last release-buttons">
                 <div className="nav-item dropdown d-none d-md-flex me-2">
                   <a
+                    data-cy="preview-link-button"
                     href={appVersionPreviewLink}
                     target="_blank"
                     className="btn btn-sm font-500 color-primary border-0"
