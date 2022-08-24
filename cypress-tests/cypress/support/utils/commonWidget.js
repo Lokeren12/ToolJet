@@ -1,5 +1,9 @@
 import { commonSelectors, commonWidgetSelector } from "Selectors/common";
-import { commonWidgetText, commonText } from "Texts/common";
+import {
+  commonWidgetText,
+  commonText,
+  codeMirrorInputLabel,
+} from "Texts/common";
 
 export const openAccordion = (accordionName, index = "0") => {
   cy.get(commonWidgetSelector.accordion(accordionName, index))
@@ -13,10 +17,9 @@ export const openAccordion = (accordionName, index = "0") => {
 };
 
 export const verifyAndModifyParameter = (paramName, value) => {
-  cy.get(commonWidgetSelector.parameterLabel(paramName)).should(
-    "have.text",
-    paramName
-  );
+  cy.get(commonWidgetSelector.parameterLabel(paramName))
+    .scrollIntoView()
+    .should("have.text", paramName);
   cy.get(
     commonWidgetSelector.parameterInputField(paramName)
   ).clearAndTypeOnCodeMirror(value);
@@ -67,12 +70,7 @@ export const addAndVerifyTooltip = (widgetSelector, message) => {
   cy.get(commonWidgetSelector.tooltipInputField).clearAndTypeOnCodeMirror(
     message
   );
-  cy.forceClickOnCanvas();
-  cy.get(widgetSelector)
-    .trigger("mouseover")
-    .then(() => {
-      cy.get(commonWidgetSelector.tooltipLabel).should("have.text", message);
-    });
+  verifyTooltip(widgetSelector, message);
 };
 
 export const editAndVerifyWidgetName = (name) => {
@@ -170,4 +168,26 @@ export const verifyBoxShadowCss = (widgetName, color, shadowParam) => {
         shadowParam[0]
       }px ${shadowParam[1]}px ${shadowParam[2]}px ${shadowParam[3]}px`
     );
+};
+
+export const addTextWidgetToVerifyValue = (customfunction) => {
+  cy.forceClickOnCanvas();
+  cy.dragAndDropWidget("Text", 600, 80);
+  openEditorSidebar("text1");
+  verifyAndModifyParameter("Text", codeMirrorInputLabel(customfunction));
+  cy.forceClickOnCanvas();
+  cy.get(commonSelectors.autoSave, { timeout: 10000 }).should(
+    "have.text",
+    commonText.autoSave
+  );
+};
+
+export const verifyTooltip = (widgetSelector, message) => {
+  cy.forceClickOnCanvas();
+  cy.get(widgetSelector)
+    .trigger("mouseover", { timeout: 2000 })
+    .trigger("mouseover")
+    .then(() => {
+      cy.get(commonWidgetSelector.tooltipLabel).should("have.text", message);
+    });
 };
